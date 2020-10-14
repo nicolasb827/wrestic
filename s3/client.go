@@ -5,6 +5,8 @@ import (
 	"io"
 	"net/url"
 	"strings"
+	"io/ioutil"
+	"net/http"
 
 	minio "github.com/minio/minio-go"
 )
@@ -14,6 +16,7 @@ type Client struct {
 	Endpoint        string
 	AccessKeyID     string
 	SecretAccessKey string
+	CustomCert      string
 	minioClient     *minio.Client
 	bucket          string
 }
@@ -24,11 +27,12 @@ type UploadObject struct {
 }
 
 // New returns a new Client
-func New(endpoint, accessKeyID, secretAccessKey string) *Client {
+func New(endpoint, accessKeyID, secretAccessKey, customCert string) *Client {
 	return &Client{
 		Endpoint:        endpoint,
 		AccessKeyID:     accessKeyID,
 		SecretAccessKey: secretAccessKey,
+		CustomCert:      customCert,
 	}
 }
 
@@ -41,6 +45,7 @@ func (c *Client) Connect() error {
 	}
 
 	var ssl bool
+	var transport *http.Transport
 	if u.Scheme == "https" {
 		ssl = true
 	} else if u.Scheme == "http" {
@@ -48,11 +53,25 @@ func (c *Client) Connect() error {
 	} else {
 		return fmt.Errorf("Endpoint %v has wrong scheme (http/https)", c.Endpoint)
 	}
+        if len(c.CustomCert) > 0 {
+		tr := minio.DefaultTransport
+		transport := tr.(*http.Transport)
+		b, err := ioutil.ReadFile(c.CustomCert)
+		if err != nil {
+			return fmt.Errorf("error creating the minio connection: error reading the certificate: %v", err)
+		}
+		if ok := transport.TLSClientConfig.RootCAs.AppendCertsFromPEM(b); !ok {
+			return fmt.Errorf("error creating the minio connection: error parsing the certificate: %v", err)
+		}
+	}
 
 	c.bucket = strings.Replace(u.Path, "/", "", 1)
 	c.Endpoint = u.Host
 	mc, err := minio.New(c.Endpoint, c.AccessKeyID, c.SecretAccessKey, ssl)
 	c.minioClient = mc
+        if len(c.CustomCert) > 0 {
+		c.minioClient.SetCustomTransport(transport)
+	}
 
 	if err == nil {
 		err = c.createBucket()

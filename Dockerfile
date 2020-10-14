@@ -8,7 +8,7 @@ RUN set -x; \
       gcc \
       git \
       wget \
- && git clone https://github.com/vshn/restic \
+ && git clone https://github.com/nicolasb827/restic \
  && cd restic \
  && git checkout 2319-dump-dir-tar \
  && go run -mod=vendor build.go -v \
