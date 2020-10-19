@@ -7,11 +7,10 @@ RUN set -x; \
       ca-certificates \
       gcc \
       git \
-      wget \
- && git clone https://github.com/nicolasb827/restic \
+      wget
+RUN git clone https://github.com/vshn/restic \
  && cd restic \
- && git checkout 2319-dump-dir-tar \
- && go run -mod=vendor build.go -v \
+ && git checkout 2319-dump-dir-tar && go run -mod=vendor build.go -v \
  && mv restic /usr/local/bin/restic \
  && chmod +x /usr/local/bin/restic \
  && mkdir /.cache \

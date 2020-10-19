@@ -99,7 +99,7 @@ func initTest(t *testing.T) *testEnvironment {
 
 	webhook := &webhookserver{}
 	webhook.runWebServer(t)
-	s3client := s3.New(getS3Repo(), os.Getenv("AWS_ACCESS_KEY_ID"), os.Getenv("AWS_SECRET_ACCESS_KEY"))
+	s3client := s3.New(getS3Repo(), os.Getenv("AWS_ACCESS_KEY_ID"), os.Getenv("AWS_SECRET_ACCESS_KEY"), os.Getenv("CUSTOM_CERTFILE"))
 	s3client.Connect()
 	s3client.DeleteBucket()
 	resetFlags()
@@ -143,7 +143,7 @@ func testResetEnvVars(vars []string) {
 }
 
 func testCheckS3Restore(t *testing.T) {
-	s3c := s3.New(os.Getenv("RESTORE_S3ENDPOINT"), os.Getenv("RESTORE_ACCESSKEYID"), os.Getenv("RESTORE_SECRETACCESSKEY"))
+	s3c := s3.New(os.Getenv("RESTORE_S3ENDPOINT"), os.Getenv("RESTORE_ACCESSKEYID"), os.Getenv("RESTORE_SECRETACCESSKEY"), os.Getenv("CUSTOM_CERTFILE"))
 	s3c.Connect()
 	files, err := s3c.ListObjects()
 	assertOK(t, err)

@@ -207,7 +207,7 @@ func (r *Restic) s3Restore(log logr.Logger, snapshot Snapshot) error {
 	PVCName := r.parsePath(snapshot.Paths)
 	fileName := fmt.Sprintf("backup-%v-%v-%v.tar.gz", snapshot.Hostname, PVCName, snapDate)
 
-	s3Client := s3.New(os.Getenv(RestoreS3EndpointEnv), os.Getenv(RestoreS3AccessKeyIDEnv), os.Getenv(RestoreS3SecretAccessKey))
+	s3Client := s3.New(os.Getenv(RestoreS3EndpointEnv), os.Getenv(RestoreS3AccessKeyIDEnv), os.Getenv(RestoreS3SecretAccessKey), os.Getenv(RestoreS3CustomCertEnv))
 	err := s3Client.Connect()
 	if err != nil {
 		return err

@@ -38,6 +38,7 @@ const (
 	RestoreS3AccessKeyIDEnv  = "RESTORE_ACCESSKEYID"
 	RestoreS3SecretAccessKey = "RESTORE_SECRETACCESSKEY"
 	RestoreDirEnv            = "RESTORE_DIR"
+	RestoreS3CustomCertEnv   = "CUSTOM_CERTFILE"
 )
 
 type ArrayOpts []string
