@@ -22,7 +22,7 @@ All the configuration needed can be done via environment variables:
 * `RESTORE_SECRETACCESSKEY` s3 secretAccessKey for the restore s3 endpoint
 * `BACKUPCOMMAND_ANNOTATION` name of the backup command annotation, default: `k8up.syn.tools/backupcommand`
 * `FILEEXTENSION_ANNOTATION` name of the file extension annotation, default: `k8up.syn.tools/file-extension`
-*  CUSTOM_CERTFILE` RestoreS3CustomCertEnv TODO
+* `CUSTOM_CERTFILE` RestoreS3CustomCertEnv TODO
 
 Configuration for the Restic repository also has to be provided via env variables. See the official [docs](https://restic.readthedocs.io/en/latest/).
 
